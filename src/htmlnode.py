@@ -1,33 +1,14 @@
 class HTMLNode:
-    def __init__(self, tag = None, value = None, children = None, props=None):
+    def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
         self.value = value
         self.children = children
         self.props = props
 
-    def __str__(self):
-        attr_str = ' '.join(f'{key}="{value}"' for key, value in self.props.items())
-        attr_str = f' {attr_str}' if attr_str else ''
-        if isinstance(self.children, str):
-            return f'<{self.tag}{attr_str}>{self.value}{self.children}</{self.tag}>'
-        else:
-            inner_html = ''.join(str(item) for item in self.children)
-            return f'<{self.tag}{attr_str}>{self.value}{inner_html}</{self.tag}>'
-
-    def __repr__(self):
-        return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
-
     def to_html(self):
-        """
-        Convert the HTMLNode to an HTML string.
-        """
-        # return str(self)
         raise NotImplementedError("to_html method not implemented")
 
     def props_to_html(self):
-        """
-        Convert the props of the HTMLNode to an HTML string.
-        """
         if self.props is None:
             return ""
         props_html = ""
@@ -35,8 +16,20 @@ class HTMLNode:
             props_html += f' {prop}="{self.props[prop]}"'
         return props_html
 
-    def add_child(self, child):
-        """
-        Add a child node to the HTMLNode.
-        """
-        self.children.append(child)
+    def __repr__(self):
+        return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
+
+
+class LeafNode(HTMLNode):
+    def __init__(self, tag, value=None, props=None):
+        super().__init__(tag, value, None, props)
+
+    def to_html(self):
+        if self.value is None:
+            raise ValueError("LeafNode requires a value")
+        if self.tag is None:
+            return self.value
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
+    def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
