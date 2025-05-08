@@ -1,8 +1,6 @@
 import unittest
 
-from textnode import TextNode, TextType
-from htmlnode import HTMLNode, LeafNode, ParentNode
-from functions import text_node_to_html_node
+from textnode import TextNode, TextType, text_node_to_html_node
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -11,7 +9,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
 
-class TestFunctions(unittest.TestCase):
+class TestTextNodeToHTMLNode(unittest.TestCase):
 
     def test_text(self):
         text = "Sample text"
