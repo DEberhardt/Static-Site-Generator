@@ -7,10 +7,14 @@ dir_path_public = "./docs"
 dir_path_content = "./content"
 template_path = "./template.html"
 
-# Basepath for relative paths (first argument)
-basepath = sys.argv[0] if len(sys.argv) > 0 else "/"
+default_basepath = "/"
 
 def main():
+    basepath = default_basepath
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+    print (f"Using BasePath: {basepath}")
+
     copy_tree(dir_path_static, dir_path_public, deleteDstFirst=True)
 
     # Generate pages for all markdown files
