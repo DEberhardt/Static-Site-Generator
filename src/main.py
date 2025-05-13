@@ -1,12 +1,14 @@
+import sys, os, glob
 from functions import copy_tree, generate_page
-import os
-import glob
 
 dir_path_static = "./static"
-dir_path_public = "./public"
+dir_path_public = "./docs"
 
 dir_path_content = "./content"
 template_path = "./template.html"
+
+# Basepath for relative paths (first argument)
+basepath = sys.argv[0] if len(sys.argv) > 0 else "/"
 
 def main():
     copy_tree(dir_path_static, dir_path_public, deleteDstFirst=True)
@@ -23,7 +25,7 @@ def main():
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
         # Generate the HTML page
-        generate_page(from_path=md_file, template_path=template_path, dest_path=output_path)
+        generate_page(from_path=md_file, template_path=template_path, dest_path=output_path, basepath=basepath)
 
 if __name__ == "__main__":
     main()
