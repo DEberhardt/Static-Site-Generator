@@ -242,7 +242,6 @@ class TestSplitNodesLink(unittest.TestCase):
         self.assertEqual(new_nodes[5].text, " here")
 
 
-
 class TestTextToTextNodes(unittest.TestCase):
     def test_text_to_textnodes_empty_string(self):
         text = ""
@@ -290,3 +289,70 @@ class TestTextToTextNodes(unittest.TestCase):
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].text, "This is an image")
         self.assertEqual(nodes[0].text_type, TextType.IMAGE)
+
+
+class TestMarkDownToBlocks(unittest.TestCase):
+    def test_markdown_to_blocks_empty_string(self):
+        markdown = ""
+        blocks = markdown_to_blocks(markdown)
+        self.assertEqual(len(blocks), 0)
+
+    def test_markdown_to_blocks(self):
+        md = """
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
+
+    def test_markdown_to_blocks_newlines(self):
+        md = """
+This is **bolded** paragraph
+
+
+
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
+
+
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title(self):
+        md = "# This is a title\n\nThis is some text."
+        title = extract_title(md)
+        self.assertEqual(title, "This is a title")
+
+    def test_extract_title_no_title(self):
+        md = "This is some text."
+        title = extract_title(md)
+        self.assertEqual(title, None)
+
+    def test_extract_title_multiple_titles(self):
+        md = "# Title 1\n\n# Title 2\n\nThis is some text."
+        title = extract_title(md)
+        self.assertEqual(title, "Title 1")
