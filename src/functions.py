@@ -288,8 +288,12 @@ def generate_page(from_path, template_path, dest_path, basepath="/"):
     htmlcode = markdown_to_html_node(content)
     with open(template_path) as template_file:
         template = template_file.read()
-    page = template.replace("{{ Title }}", title).replace("{{ Content }}", htmlcode.to_html())
-    pathedpage = page.replace('href="/"', f'href="{basepath}"').replace('src="/"', f'src="{basepath}"')
+    page = (
+        template.replace("{{ Title }}", title)
+        .replace("{{ Content }}", htmlcode.to_html())
+        .replace('href="/', f'href="{basepath}')
+        .replace('src="/', f'src="{basepath}')
+    )
     with open(dest_path, "w") as dest_file:
-        dest_file.write(pathedpage)
+        dest_file.write(page)
 # endregion
